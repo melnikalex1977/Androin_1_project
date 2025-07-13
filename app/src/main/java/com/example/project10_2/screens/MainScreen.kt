@@ -1,5 +1,11 @@
 package com.example.project10_2.screens
 
+
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.pagerTabIndicatorOffset
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.project10_2.R
@@ -11,7 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.rememberPagerState
+//import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,6 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.project10_2.ui.theme.Bluerr
+//import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+//import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import com.google.accompanist.pager.*
+
+
+
 
 @Preview(showBackground = true)
 @Composable
@@ -124,35 +141,37 @@ fun MainScreen() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(){
+fun TabLayout() {
     var tablist = listOf("HOURS", "DAYS")
-    var pagerState = rememberPagerState(
-        initialPage = 0,
-        pageCount = { tablist.size } // або конкретне число: { 3 }
-    )
+    val pagerState = rememberPagerState(initialPage = 0)
+    //var pagerState = rememberPagerState(
+    //    initialPage = 0,
+    //    pageCount = { tablist.size }
+    //)
     var tabIndex = pagerState.currentPage
     var coroutineScope = rememberCoroutineScope()
 
-    Column(modifier = Modifier.padding(start = 5.dp, end = 5.dp).clip(RoundedCornerShape(5.dp))
+    Column(
+        modifier = Modifier.padding(start = 5.dp, end = 5.dp).clip(RoundedCornerShape(5.dp))
     ) {
         TabRow(
             selectedTabIndex = tabIndex,
-            indicator = {},
+            indicator = { tabPositions ->
+                TabRowDefaults.Indicator(
+                    Modifier.tabIndicatorOffset(tabPositions[tabIndex])
+                )
+            },
             containerColor = Bluerr,
-            //indicator = { tabPositions ->
-                //TabRowDefaults.SecondaryIndicator(
-                //    modifier = Modifier.tabIndicatorOffset(pagerState, tabPositions)
-                //)
-           // },
-
         ) {
-            tablist.forEachIndexed{index, text ->
+            tablist.forEachIndexed { index, text ->
                 Tab(
-                    selected = false,
+                    selected = tabIndex == index,
                     onClick = {
-
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
                     },
                     text = {
                         Text(text = text)
@@ -160,6 +179,17 @@ fun TabLayout(){
                 )
             }
 
+
+            }
+        HorizontalPager(
+                    count = tablist.size,
+            state = pagerState,
+            modifier = Modifier.fillMaxWidth()
+            ) { page ->
+            Text(
+                text = "Content for ${tablist[page]}",
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
