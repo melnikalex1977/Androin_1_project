@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 //import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -185,11 +186,20 @@ fun TabLayout() {
                     count = tablist.size,
             state = pagerState,
             modifier = Modifier.fillMaxWidth()
-            ) { page ->
-            Text(
-                text = "Content for ${tablist[page]}",
-                modifier = Modifier.padding(16.dp)
+            //) { page ->
+            //Text(
+            //    text = "Content for ${tablist[page]}",
+            //    modifier = Modifier.padding(16.dp)
             )
+        {
+            index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ){
+                items(15){
+                    ListItem()
+                }
+            }
+        }
         }
     }
-}
