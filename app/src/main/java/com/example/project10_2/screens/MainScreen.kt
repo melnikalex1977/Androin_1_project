@@ -30,13 +30,14 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.project10_2.ui.theme.Bluerr
 
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun MainScreen() {
     Image(
         painter = painterResource(id = R.drawable.creenshot_4),
         contentDescription = "im1",
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .alpha(0.6f),
         contentScale = ContentScale.FillBounds
     )
@@ -58,7 +59,7 @@ fun MainScreen() {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     Text(
                         modifier = Modifier.padding(top = 18.dp, start = 18.dp),
                         text = "20 Jun 2015 14:00",
@@ -67,7 +68,8 @@ fun MainScreen() {
                     AsyncImage(
                         model = "https://cdn.weatherapi.com/weather/64x64/night/116.png",
                         contentDescription = "im2",
-                        modifier = Modifier.size(55.dp)
+                        modifier = Modifier
+                            .size(55.dp)
                             .padding(top = 36.dp, end = 8.dp)
                     )
                 }
@@ -86,17 +88,18 @@ fun MainScreen() {
                     style = TextStyle(fontSize = 16.sp, color = Color.White),
                     color = Color.White
                 )
-                Row(modifier = Modifier.fillMaxWidth(),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
-                ){
+                ) {
                     IconButton(
                         onClick = { }
-                    ){
-                  //      Icon(
-                  //          painter = painterResource(id = R.drawable.search),
-                   //         contentDescription = "im3",
-                    //        tint = Color.White
-                    //    )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search),
+                            contentDescription = "im3",
+                            tint = Color.White
+                        )
                     }
                     Text(
                         text = "23C/12C",
@@ -106,12 +109,12 @@ fun MainScreen() {
 
                     IconButton(
                         onClick = { }
-                    ){
-                   //     Icon(
-                    //        painter = painterResource(id = R.drawable.access),
-                    //        contentDescription = "im3",
-                    //        tint = Color.White
-                    //    )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.access),
+                            contentDescription = "im3",
+                            tint = Color.White
+                        )
                     }
                 }
             }
