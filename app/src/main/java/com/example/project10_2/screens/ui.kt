@@ -22,11 +22,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.project10_2.data.WeatherModel
 import com.example.project10_2.ui.theme.Bluerr
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun ListItem() {
+fun ListItem(item: WeatherModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,16 +48,16 @@ fun ListItem() {
                     bottom = 5.dp
                 )
             ) {
-                Text(text = "12:00")
-                Text(text = "Sunny")
+                Text(text = item.time)
+                Text(text = item.condition)
             }
             Text(
-                text = "25C",
+                text = item.currentTemp.ifEmpty { "${item.maxTemp}/${item.minTemp}" },
                 color = Color.White,
                 style = TextStyle(fontSize = 25.sp)
             )
             AsyncImage(
-                model = "https://cdn.weatherapi.com/weather/64x64/night/116.png",
+                model = "https:${item.icon}",
                 contentDescription = "im3",
                 modifier = Modifier
                     .size(55.dp)

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 //import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -50,6 +51,7 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
+import com.example.project10_2.data.WeatherModel
 import kotlinx.coroutines.launch
 import com.google.accompanist.pager.*
 
@@ -155,7 +157,9 @@ fun TabLayout() {
     var coroutineScope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.padding(start = 5.dp, end = 5.dp).clip(RoundedCornerShape(5.dp))
+        modifier = Modifier
+            .padding(start = 5.dp, end = 5.dp)
+            .clip(RoundedCornerShape(5.dp))
     ) {
         TabRow(
             selectedTabIndex = tabIndex,
@@ -181,25 +185,52 @@ fun TabLayout() {
             }
 
 
-            }
+        }
         HorizontalPager(
-                    count = tablist.size,
+            count = tablist.size,
             state = pagerState,
             modifier = Modifier.fillMaxWidth()
             //) { page ->
             //Text(
             //    text = "Content for ${tablist[page]}",
             //    modifier = Modifier.padding(16.dp)
-            )
-        {
-            index ->
+        )
+        { index ->
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
-            ){
-                items(15){
-                    ListItem()
-                }
+            ) {
+                itemsIndexed(
+                    listOf(
+                        WeatherModel(
+                            city="London",
+                            time="10:00",
+                            currentTemp="25C",
+                            condition="Sunny",
+                            icon="//cdn.weatherapi.com/weather/64x64/day/302.png",
+                            maxTemp="",
+                            minTemp="",
+                            hours=""
+
+                    ),
+                        WeatherModel(
+                            city="London",
+                            time="10:00",
+                            currentTemp="",
+                            condition="Sunny",
+                            icon="//cdn.weatherapi.com/weather/64x64/day/302.png",
+                            maxTemp="26",
+                            minTemp="12",
+                            hours=""
+
+                    )
+                )
+
+                ){
+                 _, item -> ListItem(item)
+            }
+
+
             }
         }
-        }
     }
+}
