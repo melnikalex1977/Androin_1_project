@@ -28,6 +28,7 @@ import org.json.JSONObject
 const val API_KEY = "d1dc310949c44e56b7432623241106"
 //com.meter_alc_rgb.weatherappcomposey.ui.theme.WeatherAppComposeYTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +61,8 @@ class MainActivity : ComponentActivity() {
                     contentScale = ContentScale.FillBounds
                 )
                 Column{
-                    MainScreen()
-                    TabLayout(daysList)
+                    MainScreen(currentDay)
+                    TabLayout(daysList, currentDay)
                 }
 
             }

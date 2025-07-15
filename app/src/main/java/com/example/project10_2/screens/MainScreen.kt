@@ -4,12 +4,9 @@ package com.example.project10_2.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -29,7 +26,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -40,11 +36,13 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
 
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun MainScreen() {
+fun MainScreen(currentDay: MutableState<WeatherModel>) {
 
     Column(
         modifier = Modifier
@@ -67,11 +65,11 @@ fun MainScreen() {
                 ) {
                     Text(
                         modifier = Modifier.padding(top = 18.dp, start = 18.dp),
-                        text = "20 Jun 2015 14:00",
+                        text = currentDay.value.time,
                         style = TextStyle(fontSize = 15.sp, color = Color.White)
                     )
                     AsyncImage(
-                        model = "https://cdn.weatherapi.com/weather/64x64/night/116.png",
+                        model = "https:" + currentDay.value.icon,
                         contentDescription = "im2",
                         modifier = Modifier
                             .size(55.dp)
@@ -79,17 +77,21 @@ fun MainScreen() {
                     )
                 }
                 Text(
-                    text = "Madrid",
+                    text = currentDay.value.city,
                     style = TextStyle(fontSize = 25.sp, color = Color.White),
                     color = Color.White
                 )
                 Text(
-                    text = "23C",
+                    text = if(currentDay.value.currentTemp.isNotEmpty())
+                        currentDay.value.currentTemp.toFloat().toUInt().toString() + "C"
+                    else currentDay.value.maxTemp.toFloat().toInt().toString() +
+                            "C/${currentDay.value.minTemp.toFloat().toInt()}C"
+                    ,
                     style = TextStyle(fontSize = 65.sp, color = Color.White),
                     color = Color.White
                 )
                 Text(
-                    text = "Sunny",
+                    text = currentDay.value.condition,
                     style = TextStyle(fontSize = 16.sp, color = Color.White),
                     color = Color.White
                 )
@@ -107,7 +109,9 @@ fun MainScreen() {
                         )
                     }
                     Text(
-                        text = "23C/12C",
+                        text = "${
+                            currentDay.value.maxTemp.toFloat().toUInt()
+                        }C/${currentDay.value.minTemp.toFloat().toUInt()}C",
                         style = TextStyle(fontSize = 16.sp, color = Color.White),
                         color = Color.White
                     )
@@ -130,7 +134,7 @@ fun MainScreen() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
+fun TabLayout(daysList: MutableState<List<WeatherModel>>, currentDay: MutableState<WeatherModel>) {
     var tablist = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState(initialPage = 0)
     //var pagerState = rememberPagerState(
@@ -180,18 +184,34 @@ fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
             //    modifier = Modifier.padding(16.dp)
         )
         { index ->
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                itemsIndexed(
-                    daysList.value
-
-                ){ _, item ->
-                    ListItem(item)
-                }
-
-
+            val list = when(index){
+                0 -> getWeatherByHours(currentDay.value.hours)
+                1 -> daysList.value
+                else -> daysList.value
             }
+
+            MainList(list, currentDay)
         }
     }
+}
+private fun getWeatherByHours(hours: String): List<WeatherModel> {
+    if (hours.isEmpty()) return listOf()
+    val hoursArray = JSONArray(hours)
+    val list = ArrayList<WeatherModel>()
+    for (i in 0 until hoursArray.length()) {
+        val item = hoursArray[i] as JSONObject
+        list.add(
+            WeatherModel(
+                "",
+                item.getString("time"),
+                item.getString("temp_c").toFloat().toInt().toString() + "ºC",
+                item.getJSONObject("condition").getString("text"),
+                item.getJSONObject("condition").getString("icon"),
+                "",
+                "",
+                ""
+            )
+        )
+    }
+    return list
 }
