@@ -1,15 +1,6 @@
 package com.example.project10_2.screens
 
 
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.ExperimentalFoundationApi
-import com.example.project10_2.R
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-//import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,31 +21,25 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.project10_2.ui.theme.Bluerr
-//import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-//import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
+import com.example.project10_2.R
 import com.example.project10_2.data.WeatherModel
+import com.example.project10_2.ui.theme.Bluerr
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import com.google.accompanist.pager.*
-
-
 
 
 @Preview(showBackground = true)
@@ -146,7 +130,7 @@ fun MainScreen() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabLayout() {
+fun TabLayout(daysList: MutableState<List<WeatherModel>>) {
     var tablist = listOf("HOURS", "DAYS")
     val pagerState = rememberPagerState(initialPage = 0)
     //var pagerState = rememberPagerState(
@@ -200,34 +184,11 @@ fun TabLayout() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 itemsIndexed(
-                    listOf(
-                        WeatherModel(
-                            city="London",
-                            time="10:00",
-                            currentTemp="25C",
-                            condition="Sunny",
-                            icon="//cdn.weatherapi.com/weather/64x64/day/302.png",
-                            maxTemp="",
-                            minTemp="",
-                            hours=""
+                    daysList.value
 
-                    ),
-                        WeatherModel(
-                            city="London",
-                            time="10:00",
-                            currentTemp="",
-                            condition="Sunny",
-                            icon="//cdn.weatherapi.com/weather/64x64/day/302.png",
-                            maxTemp="26",
-                            minTemp="12",
-                            hours=""
-
-                    )
-                )
-
-                ){
-                 _, item -> ListItem(item)
-            }
+                ){ _, item ->
+                    ListItem(item)
+                }
 
 
             }
