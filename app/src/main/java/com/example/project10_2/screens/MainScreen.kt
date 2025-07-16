@@ -42,7 +42,7 @@ import org.json.JSONObject
 
 //@Preview(showBackground = true)
 @Composable
-fun MainScreen(currentDay: MutableState<WeatherModel>) {
+fun MainScreen(currentDay: MutableState<WeatherModel>, onClickAccess: () -> Unit, onClickSearch: () -> Unit) {
 
     Column(
         modifier = Modifier
@@ -100,7 +100,9 @@ fun MainScreen(currentDay: MutableState<WeatherModel>) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(
-                        onClick = { }
+                        onClick = {
+                            onClickSearch.invoke()
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.search),
@@ -117,7 +119,9 @@ fun MainScreen(currentDay: MutableState<WeatherModel>) {
                     )
 
                     IconButton(
-                        onClick = { }
+                        onClick = {
+                            onClickAccess.invoke()
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.access),
@@ -178,10 +182,6 @@ fun TabLayout(daysList: MutableState<List<WeatherModel>>, currentDay: MutableSta
             count = tablist.size,
             state = pagerState,
             modifier = Modifier.fillMaxWidth()
-            //) { page ->
-            //Text(
-            //    text = "Content for ${tablist[page]}",
-            //    modifier = Modifier.padding(16.dp)
         )
         { index ->
             val list = when(index){
